@@ -4,6 +4,7 @@ on:
   workflow_dispatch:
 jobs:
   upload-new-encrypted:
+    runs-on: ubuntu-latest
     steps:
       - name: generate new entropy
         id: entropy
