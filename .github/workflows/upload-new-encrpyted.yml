@@ -20,7 +20,7 @@ jobs:
         env:
           NEW_ENCRYPTION_PASSWORD: ${{ steps.entropy.outputs.generated }}
           ROOT_FILE: secret_text.txt.gpg
-          ROOT_KEY: ${{ secrets.root-key }}
+          ROOT_KEY: ${{ secrets.ROOT_KEY }}
         run: |
           gpg --batch --decrypt --passphrase $ROOT_KEY --output decrypted.txt $ROOT_FILE
 
@@ -37,7 +37,7 @@ jobs:
       - name: send email with entropy used for new encryption
         shell: python
         env:
-          EMAIL_PASSWORD: ${{ secrets.email-password }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
           NEW_ENCRYPTION_PASSWORD: ${{ steps.entropy.outputs.generated }}
         run: |
           import smtplib, ssl
