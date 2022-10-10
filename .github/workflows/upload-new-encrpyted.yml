@@ -16,6 +16,8 @@ jobs:
 
       #- name: upload entropy to GitHub Secrets store in repository
       #  run: |
+
+      - uses: actions/checkout@v3
       
       - name: get decrypted root info, encrypt with new entropy, and then upload to repository
         env:
