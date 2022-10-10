@@ -55,9 +55,9 @@ jobs:
 
               receiver_email = sender_email
               message = """\
-Subject: Hi there
-
-This message is sent from Python.
-The entropy was: ${{ env.NEW_ENCRYPTION_PASSWORD }}"""
+              Subject: Hi there
+              
+              This message is sent from Python.
+              The entropy was: ${{ env.NEW_ENCRYPTION_PASSWORD }}"""
 
               server.sendmail(sender_email, receiver_email, message)
