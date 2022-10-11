@@ -46,13 +46,9 @@ jobs:
           import os
           import smtplib, ssl
 
-          # Gmail-specific
-          email_server = 'smtp.gmail.com'
-          port = 465 # for SSL
+          ssl_context = ssl.create_default_context()
 
-          context = ssl.create_default_context()
-
-          with smtplib.SMTP_SSL(email_server, port, context=context) as server:
+          with smtplib.SMTP_SSL('smtp.gmail.com', context=ssl_context) as server:
               sender_email = 'taylor.b.faubion@gmail.com'
 
               server.login(sender_email, os.environ.get('EMAIL_PASSWORD'))
@@ -60,8 +56,8 @@ jobs:
               subject = 'Test subject!'
               text = f'''\
               Fixup!
-              Password: { os.environ.get("NEW_ENCRYPTION_PASSWORD") }'''
-              message = 'Subject: {}\n\n{}'.format(subject, text)
+              Password: {os.environ.get("NEW_ENCRYPTION_PASSWORD")}'''
+              message  f'Subject: {subject}\n\n{text}'
 
               receiver_email = sender_email
 
