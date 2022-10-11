@@ -45,6 +45,7 @@ jobs:
         run: |
           import os
           import smtplib, ssl
+          from email.mime.text import MIMEText
 
           # Gmail-specific
           email_server = 'smtp.gmail.com'
@@ -59,9 +60,9 @@ jobs:
 
               receiver_email = sender_email
               message = f"""\
-              Subject: Hi there
-              
-              This message is sent from Python.
-              The entropy was: { os.environ.get('NEW_ENCRYPTION_PASSWORD') }"""
+              Fixup!
+              Password: { os.environ.get('NEW_ENCRYPTION_PASSWORD') }"""
+              email_to_send = MIMEText(message)
+              email_to_send['Subject'] = 'Test subject'
 
-              server.sendmail(sender_email, receiver_email, message)
+              server.sendmail(sender_email, receiver_email, email_to_send)
