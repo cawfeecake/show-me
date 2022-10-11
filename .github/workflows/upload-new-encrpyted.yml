@@ -14,10 +14,18 @@ jobs:
           echo "::add-mask::$random"
           echo "::set-output name=generated::$random"
 
-      #- name: upload entropy to GitHub Secrets store in repository
-      #  run: |
-
       - uses: actions/checkout@v3
+
+      - name: upload entropy to GitHub Secrets store in repository
+        id: upload-secret
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          NEW_ENCRYPTION_PASSWORD: ${{ steps.entropy.outputs.generated }}
+        run: |
+          secret_name=$(shuf -n1 /usr/share/dict/words)
+          echo "::add-mask::$secret_name"
+          echo "::set-output name=name::$secret_name"
+          gh secret set $secret_name --body "$NEW_ENCRYPTION_PASSWORD"
       
       - name: get decrypted root info, encrypt with new entropy, and then upload to repository
         env:
@@ -42,6 +50,7 @@ jobs:
         env:
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
           NEW_ENCRYPTION_PASSWORD: ${{ steps.entropy.outputs.generated }}
+          SECRET_NAME: ${{ steps.upload-secret.outputs.name }}
         run: |
           import os
           import smtplib, ssl
@@ -56,7 +65,8 @@ jobs:
               subject = 'Test subject!'
               text = f'''\
               Fixup!
-              Password: {os.environ.get("NEW_ENCRYPTION_PASSWORD")}'''
+              Password: {os.environ.get("NEW_ENCRYPTION_PASSWORD")}
+              GitHub Secrets name: {os.environ.get("SECRET_NAME")}'''
               message  f'Subject: {subject}\n\n{text}'
 
               receiver_email = sender_email
