@@ -22,7 +22,7 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           NEW_ENCRYPTION_PASSWORD: ${{ steps.entropy.outputs.generated }}
         run: |
-          secret_name=$(shuf -n1 /usr/share/dict/words)
+          secret_name=$(shuf -n1 /etc/dictionaries-common/words)
           echo "::add-mask::$secret_name"
           echo "::set-output name=name::$secret_name"
           gh secret set $secret_name --body "$NEW_ENCRYPTION_PASSWORD"
